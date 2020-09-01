@@ -41,6 +41,7 @@ void LounchClient()
     if(statusOfConnection == -1)
     {
         ClientInterractive(clientSocket, 1);
+        return;
     }
     else
     {

@@ -4,8 +4,6 @@
 #include <arpa/inet.h>
 #include <stdbool.h>
 
-
-
 typedef struct Node
 {
     int id;
@@ -28,9 +26,12 @@ node_t* FindStartItem(node_t* head, bool IsParityDefinition, int rows, int colum
 
 int main()
 {
+	printf("<Server> \n");
+
 	LounchServer();
 	return 0;
 }
+
 void LounchServer()
 {
 	int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -40,7 +41,6 @@ void LounchServer()
 	setConnect.sin_port = htons(8080);
 	setConnect.sin_addr.s_addr = INADDR_ANY;
 
-	printf("<Server> \n");
 
 	bind(serverSocket, (struct sockaddr *)&setConnect, sizeof(setConnect));
 	listen(serverSocket, 1);
@@ -316,7 +316,7 @@ int Interactive(int clientSocket, int idRequest)
 			printf("---------------------------------------- \n");
 			break;
 		case 7:
-			printf("Server is Baluetsya \n");
+			printf("Client is Baluetsya \n");
 			break;
 	}
 	return -1;
