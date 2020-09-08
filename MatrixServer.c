@@ -39,15 +39,24 @@ void LounchServer()
 	struct sockaddr_in setConnect;
 	setConnect.sin_family = AF_INET;
 	setConnect.sin_port = htons(8080);
-	setConnect.sin_addr.s_addr = INADDR_ANY;
+	setConnect.sin_addr.s_addr = inet_addr("127.0.0.1");
 
 
 	bind(serverSocket, (struct sockaddr *)&setConnect, sizeof(setConnect));
+
 	listen(serverSocket, 1);
 
 	int clientSocket = accept(serverSocket, NULL, NULL);
 
-	CreateMatrix(clientSocket);
+	if (clientSocket == -1)
+	{
+		Interactive(serverSocket, 8);
+	}
+
+	while(true)
+	{
+		CreateMatrix(clientSocket);
+	}
 }
 
 void CreateMatrix(int clientSocket)
@@ -161,42 +170,13 @@ void ShowMatrix(node_t *head, int clientSocket)
 		pointerColumns = pointerRows;
 		printf("\n");
 	}
+	
 	Interactive(clientSocket, 6);
 }
 
 bool IsParityDefinition(int rows, int columns)
 {
-	bool isMatrixEven = false;
-
-	if (rows == 2 && columns == 2)
-	{
-		isMatrixEven = true;
-	}
-	if (rows == 3 && columns == 3)
-	{
-		isMatrixEven = false;
-	}
-	if (rows == 4 && columns == 4)
-	{
-		isMatrixEven = true;
-	}
-	if (rows == 5 && columns == 5)
-	{
-		isMatrixEven = false;
-	}
-	if (rows == 6 && columns == 6)
-	{
-		isMatrixEven = true;
-	}
-	if (rows == 7 && columns == 7)
-	{
-		isMatrixEven = false;
-	}
-	if (rows == 8 && columns == 8)
-	{
-		isMatrixEven = true;
-	}
-	return isMatrixEven;
+	return(rows % columns) != 0;
 }
 
 node_t* FindStartItem(node_t* head, bool IsParityDefinition, int rows, int columns)
@@ -230,7 +210,6 @@ node_t* FindStartItem(node_t* head, bool IsParityDefinition, int rows, int colum
 void LounchSnake(node_t* startItem, int clientSocket)
 {
 	node_t* pointer = startItem;
-	printf("Your Snake \n");
 	pointer->isVisited = true;
 	send(clientSocket, &pointer->value, sizeof(pointer->value), 0);
 	printf("[%d]", pointer->value);
@@ -242,7 +221,6 @@ void LounchSnake(node_t* startItem, int clientSocket)
 		{
 			pointer->isVisited = true;
 			send(clientSocket, &pointer->value, sizeof(pointer->value), 0);
-			printf("[%d]",pointer->value);
 			pointer = pointer->down;
 		}
 		
@@ -250,7 +228,6 @@ void LounchSnake(node_t* startItem, int clientSocket)
 		{
 			pointer->isVisited = true;
 			send(clientSocket, &pointer->value, sizeof(pointer->value), 0);
-			printf("[%d]",pointer->value);
 			if(pointer->left == NULL)
 			{
 				return;
@@ -262,7 +239,6 @@ void LounchSnake(node_t* startItem, int clientSocket)
 		{
 			pointer->isVisited = true;
 			send(clientSocket, &pointer->value, sizeof(pointer->value), 0);
-			printf("[%d]",pointer->value);
 			pointer = pointer->up;
 		}
 		
@@ -270,7 +246,6 @@ void LounchSnake(node_t* startItem, int clientSocket)
 		{
 			pointer->isVisited = true;
 			send(clientSocket, &pointer->value, sizeof(pointer->value), 0);
-			printf("[%d]",pointer->value);
 			if(pointer->right == NULL)
 			{
 				return;
@@ -293,7 +268,6 @@ int Interactive(int clientSocket, int idRequest)
 
 	switch (idRequest)
 	{
-		
 		case 1:
 			send(clientSocket, requestOfRows, sizeof(requestOfRows), 0);
 			recv(clientSocket, &rows, sizeof(rows), 0);
@@ -317,6 +291,9 @@ int Interactive(int clientSocket, int idRequest)
 			break;
 		case 7:
 			printf("Client is Baluetsya \n");
+			break;
+		case 8:
+			printf("Client has connect \n ");
 			break;
 	}
 	return -1;
