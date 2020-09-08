@@ -18,8 +18,9 @@ void ServerInterractive(int clientSocket);
 int ResieveRequestInt(int clientSocket);
 void RequestToRecieve(int clientSocket);
 void ResponseToRequset(int clientSocket);
+bool DoRepetitionsExist();
 
-int main()
+    int main()
 {
     Interractive(1);
 
@@ -28,7 +29,7 @@ int main()
     do
     {
         ServerInterractive(clientSocket);
-    }while (Interractive(6));
+    } while (DoRepetitionsExist());
 
     return 0;
 }
@@ -159,26 +160,33 @@ bool Interractive(int id)
             break;
         case 6:
             printf("\nDo you want try again? <Y/N>\n");
-            char userRetry[4];
-            scanf("%s", userRetry);
-
-            bool DoesUserRetry;
-            
-            if(userRetry[0] == 'Y' && 'y')
-            {
-                return DoesUserRetry = true;
-            }
-            else if (userRetry[0] == 'N' && 'n')
-            {
-                return DoesUserRetry = false;
-            }
-            else
-            {
-                printf("\nyou don`t answer the question\n");
-                return Interractive(6);
-            }
+            break;
+        case 7:
+            printf("\nyou don`t answer the question\n");
             break;
     }
     return NULL;
 }
+bool DoRepetitionsExist()
+{
+    Interractive(6);
 
+    char userRetry[4];
+    scanf("%s", userRetry);
+
+    bool DoesUserRetry;
+
+    if (userRetry[0] == 'Y' && 'y')
+    {
+        return DoesUserRetry = true;
+    }
+    else if (userRetry[0] == 'N' && 'n')
+    {
+        return DoesUserRetry = false;
+    }
+    else
+    {
+        Interractive(7);
+        return DoRepetitionsExist();
+    }
+}
